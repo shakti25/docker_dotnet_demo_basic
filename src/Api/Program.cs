@@ -1,4 +1,5 @@
 using Api.Helpers;
+using Demo.Docker.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add Services
+builder.Services.AddTransient<IPersonService, PersonService>();
 
 var app = builder.Build();
 
@@ -42,6 +46,12 @@ app.MapGet("/greet/{name}", (string name) => {
     return HelperMethods.Greet(name);
 })
 .WithName("GetGreeting")
+.WithOpenApi();
+
+app.MapGet("/people", (IPersonService personService) => {
+    return personService.GetPeople();
+})
+.WithName("GetPeople")
 .WithOpenApi();
 
 app.Run();
