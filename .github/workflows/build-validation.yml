@@ -1,0 +1,33 @@
+name: build/test
+
+on:
+    push:
+        paths:
+            - "**.cs"
+            - "**.csproj"
+    pull_request:
+        branches:
+            - main
+        types:
+            - opened
+            - synchronize
+            - reopened
+env:
+    DOTNET_VERSION: "8.0.x"
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get Code
+              uses: actions/checkout@v3
+
+            - name: Setup Dotnet
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: ${{ env.DOTNET_VERSION }}
+
+            - name: Restore Packages
+              run: dotnet restore
+
+            - name: Build Solution
+              run: dotnet build -c Release --no-restore
