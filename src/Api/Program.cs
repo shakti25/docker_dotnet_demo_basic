@@ -1,3 +1,5 @@
+using Api.Helpers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -34,6 +36,12 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast")
+.WithOpenApi();
+
+app.MapGet("/greet/{name}", (string name) => {
+    return HelperMethods.Greet(name);
+})
+.WithName("GetGreeting")
 .WithOpenApi();
 
 app.Run();
